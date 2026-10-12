@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хартбинго — Remnant</title>
+<meta name="description" content="Правила и живой прогресс бинго-челленджа по Remnant: From the Ashes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=PT+Sans:wght@400;700&family=PT+Sans+Narrow:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #141210;
+    --bg2: #1c1916;
+    --panel: #201d19;
+    --line: #3a3127;
+    --edge: #6b5733;
+    --ink: #ece3cf;
+    --ink2: #b9ae99;
+    --ink3: #8a8172;
+    --gold: #d4a845;
+    --blue: #5fb0ee;
+    --green: #5cc06a;
+    --violet: #a889e6;
+    --red: #e3675a;
+    --title: 'Philosopher', Georgia, serif;
+    --body: 'PT Sans', 'Segoe UI', Arial, sans-serif;
+    --narrow: 'PT Sans Narrow', 'Arial Narrow', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--body);
+    background-image: radial-gradient(ellipse at 50% -10%, rgba(212,168,69,.10), transparent 55%);
+    min-height: 100vh;
+  }
+  a { color: var(--gold); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 40px 0 18px; text-align: center; }
+  header h1 { margin: 0; font: 700 clamp(34px, 7vw, 54px)/1.05 var(--title); letter-spacing: .06em; color: var(--gold); text-shadow: 0 2px 12px rgba(0,0,0,.7); }
+  header .sub { margin-top: 6px; color: var(--ink2); font-size: 16px; letter-spacing: .04em; }
+  .actions { margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 6px;
+    background: #9146ff; color: #fff; text-decoration: none; font-weight: 700; font-size: 15px;
+  }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink2); }
+  nav {
+    position: sticky; top: 0; z-index: 5; background: rgba(20,18,16,.92); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  nav a {
+    padding: 11px 12px; color: var(--ink2); text-decoration: none; white-space: nowrap;
+    font: 700 14px var(--narrow); letter-spacing: .1em; text-transform: uppercase;
+  }
+  nav a:hover { color: var(--gold); }
+
+  section { padding: 34px 0 6px; scroll-margin-top: 44px; }
+  h2 { margin: 0 0 14px; font: 700 28px var(--title); color: var(--gold); display: flex; align-items: center; gap: 12px; }
+  h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--edge), transparent); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+
+  /* правила */
+  .rules h3 { margin: 18px 0 6px; font: 700 20px var(--title); color: var(--ink); }
+  .rules h3:first-child { margin-top: 0; }
+  .rules p { margin: 0 0 10px; }
+  .rules ul { margin: 0 0 10px; padding-left: 22px; }
+  .rules li { margin: 4px 0; }
+  .rules li::marker { color: var(--gold); }
+  .rules b { color: #fff; }
+
+  /* статистика */
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; font-size: 15px; color: var(--ink2); }
+  .stat b { color: var(--ink); font-size: 18px; margin-left: 4px; }
+  .stat.gold b { color: var(--gold); }
+
+  /* сетка */
+  .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .tile {
+    position: relative; aspect-ratio: 1; border: 1px solid #0b0a09; border-radius: 5px; cursor: pointer;
+    background: radial-gradient(ellipse at 28% 18%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #2e2b27, #1d1b18);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -10px 18px rgba(0,0,0,.45);
+    display: flex; align-items: center; justify-content: center; padding: 16px 5px 8px; text-align: center;
+    font: 700 clamp(10px, 2.3vw, 17px)/1.1 var(--title); color: var(--ink3);
+    overflow: hidden; overflow-wrap: anywhere; hyphens: auto;
+    transition: transform .12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tile:hover { transform: translateY(-2px); }
+  .tile .n { position: absolute; left: 6px; top: 3px; font: 700 12px var(--narrow); color: var(--ink3); }
+  .tile .nm { position: absolute; right: 5px; top: 3px; font: 700 9px var(--narrow); color: var(--red); letter-spacing: .06em; }
+  @media (max-width: 520px) {
+    .grid { gap: 4px; }
+    .tile { padding: 13px 2px 4px; font-size: 9.5px; }
+    .tile .n { left: 4px; top: 1px; font-size: 10px; }
+    .tile .nm { display: none; }
+    .card { padding: 14px; }
+  }
+  .tile.s1 { color: var(--ink); box-shadow: inset 0 0 0 2px var(--gold), 0 0 12px rgba(212,168,69,.35); }
+  .tile.s2 { color: var(--ink); box-shadow: inset 0 0 0 2px var(--blue), 0 0 12px rgba(95,176,238,.35); }
+  .tile.s3 { color: #eaffea; background: linear-gradient(160deg, #24402a, #15261a); box-shadow: inset 0 0 0 2px var(--green); }
+  .tile.inline::before { content: ""; position: absolute; inset: -3px; border: 2px solid var(--gold); border-radius: 7px; box-shadow: 0 0 12px rgba(212,168,69,.6); pointer-events: none; }
+  .tile.sel { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .detail { margin-top: 12px; border-left: 3px solid var(--gold); }
+  .detail .meta { font: 700 13px var(--narrow); letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); display: flex; gap: 10px; flex-wrap: wrap; }
+  .detail .t { font: 700 23px var(--title); margin: 2px 0 6px; }
+  .detail p { margin: 0; color: var(--ink2); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 14px; color: var(--ink2); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: #2a2723; border: 1px solid #555; }
+  .legend .l1 { border-color: var(--gold); border-width: 2px; }
+  .legend .l2 { border-color: var(--blue); border-width: 2px; }
+  .legend .l3 { background: #24402a; border-color: var(--green); border-width: 2px; }
+
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font: 700 12px var(--narrow); letter-spacing: .06em; text-transform: uppercase; border: 1px solid currentColor; }
+  .pill.s0 { color: var(--ink3); }
+  .pill.s1 { color: var(--gold); }
+  .pill.s2 { color: var(--blue); }
+  .pill.s3 { color: var(--green); }
+  .pill.nm { color: var(--red); }
+  .pill.ap { color: var(--ink2); }
+
+  details.all { margin-top: 14px; }
+  details.all summary { cursor: pointer; color: var(--ink2); font-weight: 700; padding: 6px 0; }
+  .list { display: grid; gap: 8px; margin-top: 8px; }
+  .row { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; }
+  .row .h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .row .h b { font: 700 18px var(--title); }
+  .row .h .num { color: var(--ink3); font: 700 14px var(--narrow); min-width: 22px; }
+  .row p { margin: 4px 0 0; color: var(--ink2); font-size: 15.5px; }
+  .row .right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+  .dailies .row { border-left: 3px solid var(--violet); }
+  .dailies .row.s3 { border-left-color: var(--green); }
+  .prize { color: var(--violet); font-weight: 700; white-space: nowrap; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+  h3.side { margin: 0 0 10px; font: 700 20px var(--title); }
+  .buffs .row { border-left: 3px solid var(--green); }
+  .buffs .row.on { box-shadow: 0 0 0 1px var(--green), 0 0 14px rgba(92,192,106,.25); }
+  .debuffs .row { border-left: 3px solid var(--red); }
+  .debuffs .row.on { box-shadow: 0 0 0 1px var(--red), 0 0 14px rgba(227,103,90,.25); }
+  .price { color: var(--red); font-weight: 700; white-space: nowrap; }
+  .hint { color: var(--ink3); font-size: 14px; margin: -4px 0 10px; }
+
+  footer { padding: 40px 0 50px; text-align: center; color: var(--ink3); font-size: 14px; }
+  .empty { color: var(--ink3); font-style: italic; }
+  .loading { text-align: center; padding: 80px 0; color: var(--ink3); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1 id="title">ХАРТБИНГО</h1>
+    <div class="sub">Remnant: From the Ashes · no death · бинго-челлендж</div>
+    <div class="actions" id="actions"></div>
+  </div>
+</header>
+<nav>
+  <div class="wrap">
+    <a href="#rules">Правила</a>
+    <a href="#bingo">Бинго</a>
+    <a href="#dailies">Дейлики</a>
+    <a href="#effects">Бусты и дебаффы</a>
+  </div>
+</nav>
+<main class="wrap" id="main">
+  <div class="loading">Загрузка…</div>
+</main>
+<footer class="wrap" id="footer"></footer>
+
+<script>
+(() => {
+  'use strict';
+  const STATUS = ['не начато', 'в работе', 'ждёт чекпоинта', 'засчитано'];
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  let last = '', data = null, sel = null;
+
+  // Правила: «## » — подзаголовок, «- » — пункт списка, пустая строка — новый абзац, **жирный**
+  function renderRules(text) {
+    const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    let html = '', list = false, para = [];
+    const flushPara = () => { if (para.length) { html += `<p>${para.map(inline).join('<br>')}</p>`; para = []; } };
+    const flushList = () => { if (list) { html += '</ul>'; list = false; } };
+    for (const raw of String(text || '').split('\n')) {
+      const line = raw.trim();
+      if (!line) { flushPara(); flushList(); continue; }
+      if (line.startsWith('## ')) { flushPara(); flushList(); html += `<h3>${inline(line.slice(3))}</h3>`; continue; }
+      if (/^[-•] /.test(line)) { flushPara(); if (!list) { html += '<ul>'; list = true; } html += `<li>${inline(line.slice(2))}</li>`; continue; }
+      flushList(); para.push(line);
+    }
+    flushPara(); flushList();
+    return html || '<p class="empty">Правила скоро появятся.</p>';
+  }
+
+  function bingoLines(tasks) {
+    const done = i => tasks[i] && tasks[i].Status === 3;
+    const lines = [];
+    for (let r = 0; r < 5; r++) lines.push([0,1,2,3,4].map(c => r * 5 + c));
+    for (let c = 0; c < 5; c++) lines.push([0,1,2,3,4].map(r => r * 5 + c));
+    lines.push([0,6,12,18,24], [4,8,12,16,20]);
+    return lines.filter(l => l.every(done));
+  }
+
+  const diffPill = d => d ? `<span class="pill ${d === 'Кошмар' ? 'nm' : 'ap'}">${esc(d)}</span>` : '';
+  const statusPill = s => `<span class="pill s${s}">${STATUS[s] || ''}</span>`;
+  const descOf = x => x.Desc || x.Short || '';
+
+  function render() {
+    const d = data, tasks = d.tasks || [], dailies = d.dailies || [];
+    document.title = (d.title || 'Хартбинго') + ' — Remnant';
+    document.getElementById('title').textContent = d.title || 'ХАРТБИНГО';
+    document.getElementById('actions').innerHTML = d.twitch
+      ? `<a class="btn" href="${esc(d.twitch)}" target="_blank" rel="noopener">▶ Смотреть на Twitch</a>` : '';
+
+    const lines = bingoLines(tasks);
+    const inLine = new Set(lines.flat());
+    const cnt = s => tasks.filter(t => t.Status === s).length;
+    if (sel === null || !tasks[sel]) {
+      sel = tasks.findIndex(t => t.Status === 1 || t.Status === 2);
+      if (sel < 0) sel = 0;
+    }
+
+    const tiles = tasks.map((t, i) => `
+      <div class="tile s${t.Status}${inLine.has(i) ? ' inline' : ''}${i === sel ? ' sel' : ''}" data-i="${i}" role="button" tabindex="0" title="${esc(t.Name)}">
+        <span class="n">${i + 1}</span>${t.Diff === 'Кошмар' ? '<span class="nm">КОШМАР</span>' : ''}${esc(t.Name)}
+      </div>`).join('');
+
+    const allRows = tasks.map((t, i) => `
+      <div class="row"><div class="h"><span class="num">${i + 1}</span><b>${esc(t.Name)}</b>
+        <span class="right">${diffPill(t.Diff)}${statusPill(t.Status)}</span></div>
+        <p>${esc(descOf(t))}</p></div>`).join('');
+
+    const dRows = dailies.map(x => `
+      <div class="row s${x.Status}"><div class="h"><b>${esc(x.Name)}</b>
+        <span class="right">${x.Prize ? `<span class="prize">${esc(x.Prize)} ₽</span>` : ''}${diffPill(x.Diff)}${statusPill(x.Status)}</span></div>
+        <p>${esc(descOf(x))}</p></div>`).join('');
+
+    const bRows = (d.buffs || []).map(b => `
+      <div class="row${b.Active ? ' on' : ''}"><div class="h"><b>${esc(b.Name)}</b>
+        ${b.Active ? '<span class="right"><span class="pill s3">активен</span></span>' : ''}</div>
+        <p>${esc(b.Desc)}</p></div>`).join('');
+
+    const xRows = (d.debuffs || []).map(x => `
+      <div class="row${x.Count > 0 ? ' on' : ''}"><div class="h"><b>${esc(x.Name)}</b>
+        <span class="right">${x.Price ? `<span class="price">${esc(x.Price)} ₽</span>` : ''}${x.Count > 0 ? `<span class="pill nm">в очереди${x.Count > 1 ? ' ×' + x.Count : ''}</span>` : ''}</span></div>
+        <p>${esc(x.Desc)}</p></div>`).join('');
+
+    document.getElementById('main').innerHTML = `
+      <section id="rules"><h2>Правила</h2><div class="card rules">${renderRules(d.rules)}</div></section>
+
+      <section id="bingo"><h2>Бинго</h2>
+        <div class="stats">
+          <div class="stat">засчитано<b>${cnt(3)}/${tasks.length}</b></div>
+          <div class="stat gold">линий бинго<b>${lines.length}</b></div>
+          <div class="stat">в работе<b>${cnt(1)}</b></div>
+          ${cnt(2) ? `<div class="stat">ждут чекпоинта<b>${cnt(2)}</b></div>` : ''}
+        </div>
+        <div class="grid" id="grid">${tiles}</div>
+        <div class="card detail" id="detail"></div>
+        <div class="legend">
+          <span><i></i>не начато</span><span><i class="l1"></i>в работе</span>
+          <span><i class="l2"></i>выполнено, ждёт чекпоинта</span><span><i class="l3"></i>засчитано</span>
+        </div>
+        <details class="all"><summary>Все задания списком</summary><div class="list">${allRows}</div></details>
+      </section>
+
+      <section id="dailies" class="dailies"><h2>Дейлики</h2>
+        <p class="hint">Дополнительные задания по желанию стримера, за каждое — денежный приз.</p>
+        <div class="list">${dRows || '<p class="empty">Пока нет.</p>'}</div>
+      </section>
+
+      <section id="effects"><h2>Бусты и дебаффы</h2>
+        <div class="two">
+          <div class="buffs"><h3 class="side">Бусты стримера</h3><div class="list">${bRows || '<p class="empty">Нет.</p>'}</div></div>
+          <div class="debuffs"><h3 class="side">Дебаффы — за донат</h3><div class="list">${xRows || '<p class="empty">Нет.</p>'}</div></div>
+        </div>
+      </section>`;
+
+    showDetail();
+    document.getElementById('grid').addEventListener('click', e => {
+      const t = e.target.closest('.tile');
+      if (!t) return;
+      sel = +t.dataset.i;
+      document.querySelectorAll('.tile.sel').forEach(x => x.classList.remove('sel'));
+      t.classList.add('sel');
+      showDetail();
+    });
+    document.getElementById('grid').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); }
+    });
+    updateFooter();
+  }
+
+  function showDetail() {
+    const t = (data.tasks || [])[sel];
+    if (!t) return;
+    document.getElementById('detail').innerHTML = `
+      <div class="meta"><span>Задание ${sel + 1}</span>${diffPill(t.Diff)}${statusPill(t.Status)}</div>
+      <div class="t">${esc(t.Name)}</div><p>${esc(descOf(t))}</p>`;
+  }
+
+  function updateFooter() {
+    if (!data || !data.updated) return;
+    const min = Math.round((Date.now() - data.updated) / 60000);
+    const ago = min < 1 ? 'только что' : min < 60 ? `${min} мин назад` : new Date(data.updated).toLocaleString('ru-RU', { dateStyle: 'medium', timeStyle: 'short' });
+    document.getElementById('footer').textContent = 'Прогресс обновлён: ' + ago;
+  }
+
+  function poll() {
+    const s = document.createElement('script');
+    s.src = 'data.js?t=' + Date.now();
+    s.onload = () => {
+      s.remove();
+      const d = window.BINGO_SITE;
+      if (!d) return;
+      const j = JSON.stringify(d);
+      if (j !== last) { last = j; data = d; render(); }
+    };
+    s.onerror = () => s.remove();
+    document.head.appendChild(s);
+  }
+
+  poll();
+  setInterval(poll, 60000);
+  setInterval(updateFooter, 30000);
+})();
+</script>
+</body>
+</html>
