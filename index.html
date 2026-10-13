@@ -39,6 +39,13 @@
   header { padding: 40px 0 18px; text-align: center; }
   header h1 { margin: 0; font: 700 clamp(34px, 7vw, 54px)/1.05 var(--title); letter-spacing: .06em; color: var(--gold); text-shadow: 0 2px 12px rgba(0,0,0,.7); }
   header .sub { margin-top: 6px; color: var(--ink2); font-size: 16px; letter-spacing: .04em; }
+  .try {
+    display: inline-flex; align-items: baseline; gap: 8px; margin-top: 14px; padding: 4px 16px 6px;
+    border: 1px solid var(--edge); border-radius: 6px; background: var(--panel);
+  }
+  .try[hidden] { display: none; }
+  .try span { font: 700 13px var(--narrow); letter-spacing: .16em; color: var(--ink3); text-transform: uppercase; }
+  .try b { font: 700 28px/1 var(--title); color: var(--gold); }
   .actions { margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 6px;
@@ -144,6 +151,7 @@
   .buffs .row.on { box-shadow: 0 0 0 1px var(--green), 0 0 14px rgba(92,192,106,.25); }
   .debuffs .row { border-left: 3px solid var(--red); }
   .debuffs .row.on { box-shadow: 0 0 0 1px var(--red), 0 0 14px rgba(227,103,90,.25); }
+  .bprice { color: var(--green); font-weight: 700; white-space: nowrap; }
   .price { color: var(--red); font-weight: 700; white-space: nowrap; }
   .hint { color: var(--ink3); font-size: 14px; margin: -4px 0 10px; }
 
@@ -157,6 +165,7 @@
   <div class="wrap">
     <h1 id="title">ХАРТБИНГО</h1>
     <div class="sub">Remnant: From the Ashes · no death · бинго-челлендж</div>
+    <div class="try" id="try" hidden><span>Сейчас трай</span><b></b></div>
     <div class="actions" id="actions"></div>
   </div>
 </header>
@@ -214,6 +223,9 @@
     const d = data, tasks = d.tasks || [], dailies = d.dailies || [];
     document.title = (d.title || 'Хартбинго') + ' — Remnant';
     document.getElementById('title').textContent = d.title || 'ХАРТБИНГО';
+    const tryBox = document.getElementById('try');
+    tryBox.hidden = !d.try;
+    tryBox.querySelector('b').textContent = '#' + (d.try || 1);
     document.getElementById('actions').innerHTML = d.twitch
       ? `<a class="btn" href="${esc(d.twitch)}" target="_blank" rel="noopener">▶ Смотреть на Twitch</a>` : '';
 
@@ -242,7 +254,7 @@
 
     const bRows = (d.buffs || []).map(b => `
       <div class="row${b.Active ? ' on' : ''}"><div class="h"><b>${esc(b.Name)}</b>
-        ${b.Active ? '<span class="right"><span class="pill s3">активен</span></span>' : ''}</div>
+        <span class="right">${b.Price ? `<span class="bprice">${esc(b.Price)} ₽</span>` : ''}${b.Active ? '<span class="pill s3">активен</span>' : ''}</span></div>
         <p>${esc(b.Desc)}</p></div>`).join('');
 
     const xRows = (d.debuffs || []).map(x => `
@@ -276,7 +288,7 @@
 
       <section id="effects"><h2>Бусты и дебаффы</h2>
         <div class="two">
-          <div class="buffs"><h3 class="side">Бусты стримера</h3><div class="list">${bRows || '<p class="empty">Нет.</p>'}</div></div>
+          <div class="buffs"><h3 class="side">Бусты</h3><div class="list">${bRows || '<p class="empty">Нет.</p>'}</div></div>
           <div class="debuffs"><h3 class="side">Дебаффы — за донат</h3><div class="list">${xRows || '<p class="empty">Нет.</p>'}</div></div>
         </div>
       </section>`;
